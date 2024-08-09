@@ -1,3 +1,5 @@
+import graph from "chart.js";
+
 interface Poop {
 	name: string;
 	date: Date;
@@ -33,6 +35,7 @@ function parseFile(file: File): void {
 			result.push({ name, date });
 		}
 
+		result.sort((a, b) => a.date.getTime() - b.date.getTime());
 		initializeGraphs(result);
 	}
 }
@@ -50,4 +53,59 @@ function parseDate(date: string): Date {
 
 function initializeGraphs(data: Poop[]): void {
 	console.log(data);
+}
+
+function averageGraph(data: Poop[], name: string | null, interval: "day" | "week" | "month"): void {
+	const DAY_LENGTH = 24 * 60 * 60 * 1000;
+
+	function advanceDate(date: Date, interval: "day" | "week" | "month"): Date {
+		date = new Date(date.getTime());
+		switch (interval) {
+		case "day":	
+			date = new Date(date.getTime() + DAY_LENGTH);
+			break;
+		case "week":
+			date = new Date(date.getTime() + DAY_LENGTH * 7);
+			break;
+		case "month":
+			let month = date.getMonth();
+			if (++month >= 12) {
+				date.setFullYear(date.getFullYear(), 0);
+			} else {
+				date.setMonth(month);
+			}
+			break;
+		}
+		return date;
+	}
+
+	if (name !== null) {
+		data = data.filter(v => v.name === name);
+	}
+
+	const averages = [];
+	let currentCount = 0;
+
+	let date = data[0].date;
+	switch (interval) {
+		case "day":
+			date.setHours(0, 0, 0);
+		case "week":
+			const weekday = date.getDay();
+			date = new Date(date.getTime() - DAY_LENGTH * weekday);
+			break;
+		case "month":
+			date.setDate(1);
+	}
+	let nextDate = advanceDate(date, interval);
+
+	for (const poop of data) {
+		while (poop.date.getTime() >= nextDate.getTime()) {
+			date = nextDate;
+			nextDate = advanceDate(nextDate, interval);
+		}
+
+		currentCount++;
+
+	}
 }
