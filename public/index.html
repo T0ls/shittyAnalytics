@@ -4,9 +4,112 @@
 	<meta charset="UTF-8">
 	<title>Shitty Analytics</title>
 	<script src="../dist/bundle.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-	<input id="fileInput" type="file">
-	<h1>Hello, World</h1>
+	<div id="genContainer" class="container p-2">
+		<div class="card">
+			<div class="card-body">
+				<h1 class="titleFont" style="text-align: center;">shitty analytics</h1>
+				<input id="fileInput" type="file">
+				<div>
+					<ul class="list-group">
+						<li class="list-group-item">
+							<div class="form-group">
+								<label for="datepicker">Scegli un periodo:</label>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+									<label class="form-check-label" for="flexCheckDefault">Ever</label>
+								</div>
+								<div class="d-flex">
+									<input class="form-control me-1" style="width: max-content;" type="date" value="2017-06-01" />
+									<input class="form-control" style="width: max-content;" type="date" value="2017-06-01" />
+								</div>
+							</div>
+							<p class="m-0 mb-1">Quick periods:</p>
+							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+								<label class="btn btn-outline-primary" for="btnradio1">giorno</label>
+
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+								<label class="btn btn-outline-primary" for="btnradio2">settimana</label>
+
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+								<label class="btn btn-outline-primary" for="btnradio3">mese</label>
+
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+								<label class="btn btn-outline-primary" for="btnradio4">anno</label>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<a href="#" class="btn btn-primary mt-2">Submit</a>
+				<div id="genCharts">
+					<div>
+						<canvas id="totalStackGraph"></canvas>
+					</div>
+					<div>
+						<canvas id="totalPieGraph"></canvas>
+					</div>
+					<div>
+						<canvas id="streakGraph"></canvas>
+					</div>
+					<div>
+						<canvas id="gapGraph"></canvas>
+					</div>
+					<div>
+						<canvas id="leaderboardGraph"></canvas>
+					</div>
+					<!-- inserire menù -->
+					<div>
+						<canvas id="averageGraph"></canvas>
+					</div>
+					<div>
+						<canvas id="commonHourGraph"></canvas>
+					</div>
+
+					<div class="container mt-5">
+    <h2 class="text-center">Classifica</h2>
+
+    <!-- Podio -->
+    <div class="podium mt-4">
+        <!-- Secondo posto -->
+        <div class="podium-step podium-second">
+            <h4>Secondo Posto</h4>
+            <p>Nome del Secondo</p>
+            <span class="badge bg-secondary">🥈</span>
+        </div>
+
+        <!-- Primo posto -->
+        <div class="podium-step podium-first">
+            <h4>Primo Posto</h4>
+            <p>Nome del Primo</p>
+            <span class="badge bg-warning">🥇</span>
+        </div>
+
+        <!-- Terzo posto -->
+        <div class="podium-step podium-third">
+            <h4>Terzo Posto</h4>
+            <p>Nome del Terzo</p>
+            <span class="badge bg-danger" style="background-color: e97f88;">🥉</span>
+        </div>
+    </div>
+
+    <!-- Lista degli altri classificati -->
+    <ul class="list-group mt-5">
+        <li class="list-group-item">4° Nome del Quarto</li>
+        <li class="list-group-item">5° Nome del Quinto</li>
+        <li class="list-group-item">6° Nome del Sesto</li>
+        <!-- Aggiungi altri partecipanti qui -->
+    </ul>
+</div>
+					<!-- ordine - reversed -->
+					<!-- periodo: giorno settiman mese -->
+				</div>
+			</div>
+		</div>
+		</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,0 +1,42 @@
+@font-face {
+  font-family: titleFont;
+  src: url(Bouncy-Thin-PERSONAL_USE_ONLY.otf);
+}
+
+.titleFont {
+	font-family: titleFont;
+}
+
+.podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 300px;
+        }
+
+        .podium-step {
+            text-align: center;
+            padding: 10px;
+            color: #fff;
+        }
+
+        .podium-first {
+            width: 150px;
+            height: 200px;
+            background-color: #d4af37;
+            margin: 0 15px;
+        }
+
+        .podium-second {
+            width: 150px;
+            height: 150px;
+            background-color: #6c757d;
+            margin: 0 15px;
+        }
+
+        .podium-third {
+            width: 150px;
+            height: 100px;
+            background-color: #B87333;
+            margin: 0 15px;
+        }
