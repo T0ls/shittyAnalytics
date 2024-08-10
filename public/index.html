@@ -19,7 +19,7 @@
 					<ul class="list-group">
 						<li class="list-group-item">
 							<div class="mb-1">
-								<label for="formFile" class="form-label">Upload file</label>
+								<label for="formFile" class="form-label">Upload file:</label>
 								<input class="form-control" type="file" id="formFile" style="width: max-content;">
 							</div>
 						</li>
@@ -27,10 +27,22 @@
 							<div class="container p-0">
 								<form>
 									<div class="mb-1">
-										<label for="daterange" class="form-label">Select Date Range</label>
+										<label for="daterange" class="form-label">Select Date Range:</label>
 										<input type="text" id="daterange" class="form-control" style="width: max-content;" name="daterange"/>
 									</div>
 								</form>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<label for="daterange" class="form-label d-block">Select persons:</label>
+							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+								<label class="btn btn-outline-primary" for="btnradio1">General</label>
+								
+								<template id="personsTemplate">
+									<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+									<label class="btn btn-outline-primary" for="btnradio2">Person</label>
+								</template>
 							</div>
 						</li>
 					</ul>
