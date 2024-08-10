@@ -28,17 +28,33 @@
 								<form>
 									<div class="mb-1">
 										<label for="daterange" class="form-label">Select Date Range</label>
-										<input type="text" id="daterange" class="form-control" name="daterange"/>
+										<input type="text" id="daterange" class="form-control" style="width: max-content;" name="daterange"/>
 									</div>
 								</form>
 							</div>
 						</li>
 					</ul>
 				</div>
-				<a href="#" class="btn btn-primary mt-2">Submit</a>
-				<div id="genCharts">
-					<div>
-						<canvas id="totalStackGraph"></canvas>
+				<div id="genCharts" class="container p-1 mt-3">
+					<div class="row">
+						<div class="card col-6">
+							<div class="card-body">
+								<div>
+									<canvas id="totalStackGraph"></canvas>
+								</div>
+								<h5 class="card-title">Total</h5>
+								<p class="card-text">cagate totali</p>
+							</div>
+						</div>
+						<div class="card col-6">
+							<div class="card-body">
+								<div>
+									<canvas id="totalStackGraph"></canvas>
+								</div>
+								<h5 class="card-title">Total</h5>
+								<p class="card-text">cagate totali</p>
+							</div>
+						</div>
 					</div>
 					<div>
 						<canvas id="totalPieGraph"></canvas>
@@ -57,14 +73,14 @@
 						<canvas id="averageGraph"></canvas>
 					</div>
 					<div>
-						<canvas id="commonHourGraph"></canvas>
+						<canvas id="commonHoursGraph"></canvas>
 					</div>
 
 					<div class="container mt-5">
 						<h2 class="text-center">Classifica</h2>
 
 						<!-- Podio -->
-						<div class="podium mt-4">
+						<div class="podium">
 							<!-- Secondo posto -->
 							<div class="podium-step podium-second">
 								<h4>Secondo Posto</h4>
@@ -109,7 +125,12 @@
 	<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<!-- Date Range Picker JS -->
 	<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-	
+	<!-- Charts.js -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<!-- script for Graphs -->
+	<script src="scriptGraphs.js"></script>
+
 	<!-- script for dateSelector -->
 	<script>
 		$(function() {
