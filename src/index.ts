@@ -1,19 +1,18 @@
-import graph from "chart.js";
+import { Chart, ChartConfiguration, ChartData, ChartDataset } from "chart.js/auto";
+import { collectDateRange, Timespan } from "./helpers";
 
-interface Poop {
+export interface Poop {
 	name: string;
 	date: Date;
 }
 
-window.onload = () => {
-	const input: HTMLInputElement = document.querySelector("#fileInput");
-	console.log(input);
+document.addEventListener("DOMContentLoaded", evt => {
+	const input: HTMLInputElement = document.querySelector("#formFile");
 	input.onchange = _ => {
 		const file = input.files[0];
 		parseFile(file);
 	}
-	input.click();
-}
+});
 
 function parseFile(file: File): void {
 	const reader = new FileReader();
@@ -25,7 +24,6 @@ function parseFile(file: File): void {
 		const content = contentBuf.toString();
 		const lines = content.split(/\r?\n|\r|\n/g);
 		for (const line of lines) {
-			console.log(line);
 			if (!line.endsWith("💩")) continue;
 			const [ dateStr, rest ] = line.split(" - ", 2);
 			const endIndex = rest.indexOf(":");
@@ -52,60 +50,87 @@ function parseDate(date: string): Date {
 }
 
 function initializeGraphs(data: Poop[]): void {
-	console.log(data);
+	avgGraph(data, null, "day");
 }
 
-function averageGraph(data: Poop[], name: string | null, interval: "day" | "week" | "month"): void {
-	const DAY_LENGTH = 24 * 60 * 60 * 1000;
-
-	function advanceDate(date: Date, interval: "day" | "week" | "month"): Date {
-		date = new Date(date.getTime());
-		switch (interval) {
-		case "day":	
-			date = new Date(date.getTime() + DAY_LENGTH);
-			break;
-		case "week":
-			date = new Date(date.getTime() + DAY_LENGTH * 7);
-			break;
-		case "month":
-			let month = date.getMonth();
-			if (++month >= 12) {
-				date.setFullYear(date.getFullYear(), 0);
-			} else {
-				date.setMonth(month);
-			}
-			break;
-		}
-		return date;
-	}
-
+function avgGraph(data: Poop[], name: string | null, timespan: Timespan): void {
 	if (name !== null) {
-		data = data.filter(v => v.name === name);
+		data = data.filter(p => p.name === name);
 	}
 
-	const averages = [];
-	let currentCount = 0;
+	const collected = collectDateRange(data, timespan);
+	const collectedByName: Map<string, number[]> = new Map();
+	const dateLabels: string[] = [];
 
-	let date = data[0].date;
-	switch (interval) {
-		case "day":
-			date.setHours(0, 0, 0);
-		case "week":
-			const weekday = date.getDay();
-			date = new Date(date.getTime() - DAY_LENGTH * weekday);
-			break;
-		case "month":
-			date.setDate(1);
+	for (const {date, names} of collected) {
+		const day = date.getDate();
+		const month = date.getMonth() + 1;
+		const year = date.getFullYear();
+		const dateStr = `${day}/${month}/${year}`;
+		dateLabels.push(dateStr);
+
+		const counts: Map<string, number> = new Map();
+		names.forEach(n => {
+			let newValue = 1;
+			if (counts.has(n)) newValue = counts.get(n) + 1;
+			counts.set(n, newValue);
+		});
+		counts.forEach((value, name) => {
+			if (!collectedByName.has(name)) {
+				collectedByName.set(name, []);
+			}
+			collectedByName.get(name).push(value);
+		});
 	}
-	let nextDate = advanceDate(date, interval);
 
-	for (const poop of data) {
-		while (poop.date.getTime() >= nextDate.getTime()) {
-			date = nextDate;
-			nextDate = advanceDate(nextDate, interval);
+	const datasets: ChartDataset<"line", number[]>[] = [];
+	collectedByName.forEach((counts, name) => {
+		const padding = Array(dateLabels.length - counts.length).fill(0);
+		const paddedCounts = counts.concat(padding);
+		datasets.push({
+			label: name,
+			data: paddedCounts,
+			fill: true
+		});
+	});
+	const chartData: ChartData<"line", number[], string> = {
+		labels: dateLabels,
+		datasets
+	}
+
+	const graphCfg: ChartConfiguration<"line", number[], string> = {
+		type: "line",
+		data: chartData,
+		options: {
+			responsive: true,
+			plugins: {
+				tooltip: {
+					mode: "index"
+				}
+			},
+			interaction: {
+				mode: "nearest",
+				axis: "x",
+				intersect: false
+			},
+			scales: {
+				x: {
+					title: {
+						display: true,
+						text: "Date"
+					}
+				},
+				y: {
+					stacked: true,
+					title: {
+						display: true,
+						text: "Poops"
+					}
+				}
+			}
 		}
+	};
 
-		currentCount++;
-
-	}
+	const canvas: HTMLCanvasElement = document.querySelector("#totalStackGraph");
+	new Chart(canvas, graphCfg);
 }
