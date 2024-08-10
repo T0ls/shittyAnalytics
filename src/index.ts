@@ -51,6 +51,27 @@ function parseDate(date: string): Date {
 
 function initializeGraphs(data: Poop[]): void {
 	avgGraph(data, null, "day");
+	fillPeopleRadio(data);
+}
+
+function fillPeopleRadio(data: Poop[]): void {
+	const names: string[] = [];
+	for (const {name} of data) {
+		if (!names.includes(name)) {
+			names.push(name);
+		}
+	}
+	console.log("names:",names);
+	
+	const container = document.getElementById("namesDropdown");
+	const template = container.querySelector("template");
+	names.forEach((name, i) => {
+		const templateClone = template.content.cloneNode(true) as DocumentFragment;
+		templateClone.querySelector("li").id = `namesDropdownSelection${i+1}`;
+		templateClone.querySelector("a").innerHTML = name;
+
+		container.appendChild(templateClone);
+	});
 }
 
 function avgGraph(data: Poop[], name: string | null, timespan: Timespan): void {

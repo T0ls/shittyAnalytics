@@ -35,14 +35,16 @@
 						</li>
 						<li class="list-group-item">
 							<label for="daterange" class="form-label d-block">Select persons:</label>
-							<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-								<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-								<label class="btn btn-outline-primary" for="btnradio1">General</label>
-								
-								<template id="personsTemplate">
-									<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-									<label class="btn btn-outline-primary" for="btnradio2">Person</label>
-								</template>
+							<div class="container p-0">
+								<div class="dropdown">
+									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">General</button>
+									<ul id="namesDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+										<li id="namesDropdownSelection0"><a class="dropdown-item" href="#">General</a></li>
+										<template id="templateNamesDropdown">
+											<li><a class="dropdown-item" href="#">Personal</a></li>
+										</template>
+									</ul>
+								</div>
 							</div>
 						</li>
 					</ul>
