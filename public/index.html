@@ -37,11 +37,12 @@
 							<label for="daterange" class="form-label d-block">Select persons:</label>
 							<div class="container p-0">
 								<div class="dropdown">
-									<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">General</button>
+									<button  id="dropdownMenuButton" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">General</button>
 									<ul id="namesDropdown" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-										<li id="namesDropdownSelection0"><a class="dropdown-item" href="#">General</a></li>
+										<li id="namesDropdownSelection0"><a class="dropdown-item">General</a></li>
+										<li id="namesDropdownSelectionX"><a class="dropdown-item">Personal</a></li>
 										<template id="templateNamesDropdown">
-											<li><a class="dropdown-item" href="#">Personal</a></li>
+											<li><a class="dropdown-item">Personal</a></li>
 										</template>
 									</ul>
 								</div>
@@ -51,73 +52,113 @@
 				</div>
 				<div id="genCharts" class="container p-1 mt-3">
 					<div class="row">
-						<div class="card col-6">
+						<div class="card">
 							<div class="card-body">
 								<canvas id="totalStackGraph"></canvas>
 								<h5 class="card-title">Total</h5>
-								<p class="card-text">cagate totali</p>
+								<p class="card-text">add descr</p>
 							</div>
 						</div>
-						<div class="card col-6">
+					</div>
+					<div class="row mt-2">
+						<div class="card">
 							<div class="card-body">
 								<canvas id="totalPieGraph"></canvas>
-								<h5 class="card-title">Total</h5>
-								<p class="card-text">cagate totali</p>
+								<h5 class="card-title">Total Pie</h5>
+								<p class="card-text">add descr</p>
 							</div>
 						</div>
 					</div>
-					<div>
-						<canvas id="streakGraph"></canvas>
+					<div class="row mt-2">
+						<div class="card">
+							<div class="card-body">
+								<canvas id="streakGraph"></canvas>
+								<h5 class="card-title">Steak</h5>
+								<p class="card-text">add descr</p>
+							</div>
+						</div>
 					</div>
-					<div>
-						<canvas id="gapGraph"></canvas>
+					<div class="row mt-2">
+						<div class="card">
+							<div class="card-body">
+								<canvas id="gapGraph"></canvas>
+								<h5 class="card-title">Gap</h5>
+								<p class="card-text">add descr</p>
+							</div>
+						</div>
 					</div>
-					<div>
-						<canvas id="leaderboardGraph"></canvas>
+					<div class="row mt-2">
+						<div class="card">
+							<div class="card-body">
+								<canvas id="leaderboardGraph"></canvas>
+								<h5 class="card-title">LeaderBoard</h5>
+								<p class="card-text">add descr</p>
+							</div>
+						</div>
 					</div>
 					<!-- inserire menù -->
-					<div>
-						<canvas id="averageGraph"></canvas>
-					</div>
-					<div>
-						<canvas id="commonHoursGraph"></canvas>
-					</div>
-
-					<div class="container mt-5">
-						<h2 class="text-center">Classifica</h2>
-
-						<!-- Podio -->
-						<div class="podium">
-							<!-- Secondo posto -->
-							<div class="podium-step podium-second">
-								<h4>Secondo Posto</h4>
-								<p>Nome del Secondo</p>
-								<span class="badge bg-secondary">🥈</span>
-							</div>
-
-							<!-- Primo posto -->
-							<div class="podium-step podium-first">
-								<h4>Primo Posto</h4>
-								<p>Nome del Primo</p>
-								<span class="badge bg-warning">🥇</span>
-							</div>
-
-							<!-- Terzo posto -->
-							<div class="podium-step podium-third">
-								<h4>Terzo Posto</h4>
-								<p>Nome del Terzo</p>
-								<span class="badge bg-danger" style="background-color: e97f88;">🥉</span>
+					<div class="row mt-2">
+						<div class="card">
+							<div class="card-body">
+								<canvas id="averageGraph"></canvas>
+								<h5 class="card-title">Average</h5>
+								<p class="card-text">add descr</p>
 							</div>
 						</div>
-
-						<!-- Lista degli altri classificati -->
-						<ul class="list-group mt-5">
-							<li class="list-group-item">4° Nome del Quarto</li>
-							<li class="list-group-item">5° Nome del Quinto</li>
-							<li class="list-group-item">6° Nome del Sesto</li>
-							<!-- Aggiungi altri partecipanti qui -->
-						</ul>
 					</div>
+					<div class="row mt-2">
+						<div class="card">
+							<div class="card-body">
+								<canvas id="commonHoursGraph"></canvas>
+								<h5 class="card-title">Common Hours</h5>
+								<p class="card-text">add descr</p>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-2">
+						<div class="card">
+							<div class="card-body">
+								<div class="container mt-5">
+									<h2 class="text-center">Classifica</h2>
+
+									<!-- Podio -->
+									<div class="podium">
+										<!-- Secondo posto -->
+										<div class="podium-step podium-second">
+											<h4>Secondo Posto</h4>
+											<p>Nome del Secondo</p>
+											<span class="badge bg-secondary">🥈</span>
+										</div>
+
+										<!-- Primo posto -->
+										<div class="podium-step podium-first">
+											<h4>Primo Posto</h4>
+											<p>Nome del Primo</p>
+											<span class="badge bg-warning">🥇</span>
+										</div>
+
+										<!-- Terzo posto -->
+										<div class="podium-step podium-third">
+											<h4>Terzo Posto</h4>
+											<p>Nome del Terzo</p>
+											<span class="badge bg-danger" style="background-color: e97f88;">🥉</span>
+										</div>
+									</div>
+
+									<!-- Lista degli altri classificati -->
+									<ul class="list-group mt-5">
+										<li class="list-group-item">4° Nome del Quarto</li>
+										<li class="list-group-item">5° Nome del Quinto</li>
+										<li class="list-group-item">6° Nome del Sesto</li>
+										<!-- Aggiungi altri partecipanti qui -->
+									</ul>
+								</div>
+								<h5 class="card-title mt-3">PLACEHOLDER</h5>
+								<p class="card-text">add descr</p>
+							</div>
+						</div>
+					</div>
+
 					<!-- ordine - reversed -->
 					<!-- periodo: giorno settiman mese -->
 				</div>

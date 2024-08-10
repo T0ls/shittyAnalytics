@@ -6,6 +6,8 @@ export interface Poop {
 	date: Date;
 }
 
+let selectedName: string = "general";
+
 document.addEventListener("DOMContentLoaded", evt => {
 	const input: HTMLInputElement = document.querySelector("#formFile");
 	input.onchange = _ => {
@@ -65,6 +67,7 @@ function fillPeopleRadio(data: Poop[]): void {
 	
 	const container = document.getElementById("namesDropdown");
 	const template = container.querySelector("template");
+	document.getElementById("namesDropdownSelectionX").classList.add("d-none");
 	names.forEach((name, i) => {
 		const templateClone = template.content.cloneNode(true) as DocumentFragment;
 		templateClone.querySelector("li").id = `namesDropdownSelection${i+1}`;
@@ -72,6 +75,25 @@ function fillPeopleRadio(data: Poop[]): void {
 
 		container.appendChild(templateClone);
 	});
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("dropdownMenuButton") as HTMLButtonElement;
+
+	button.addEventListener("click", () => {
+		const dropdownItems = document.querySelectorAll<HTMLAnchorElement>('#namesDropdown .dropdown-item');
+
+		dropdownItems.forEach((item) => {
+			item.addEventListener('click', () => {
+				selectedName = item.textContent?.trim();
+				console.log(item.textContent?.trim());
+				document.getElementById("dropdownMenuButton").innerHTML = selectedName;
+			});
+		});
+	});
+});
+
+function updateSelectedName(): void {
 }
 
 function avgGraph(data: Poop[], name: string | null, timespan: Timespan): void {
