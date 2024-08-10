@@ -1,5 +1,5 @@
 import { Chart, ChartConfiguration, ChartData, ChartDataset } from "chart.js/auto";
-import { collectDateRange, Timespan } from "./helpers";
+import { collectDateRange, collectNameDate, Timespan } from "./helpers";
 
 export interface Poop {
 	name: string;
@@ -50,7 +50,7 @@ function parseDate(date: string): Date {
 }
 
 function initializeGraphs(data: Poop[]): void {
-	avgGraph(data, null, "day");
+	totalGraph(data, null, "day");
 	fillPeopleRadio(data);
 }
 
@@ -79,38 +79,88 @@ function avgGraph(data: Poop[], name: string | null, timespan: Timespan): void {
 		data = data.filter(p => p.name === name);
 	}
 
-	const collected = collectDateRange(data, timespan);
-	const collectedByName: Map<string, number[]> = new Map();
-	const dateLabels: string[] = [];
-
-	for (const {date, names} of collected) {
+	const collected = collectNameDate(data, timespan);
+	const dateLabels = collected.dates.map(date => {
 		const day = date.getDate();
 		const month = date.getMonth() + 1;
 		const year = date.getFullYear();
-		const dateStr = `${day}/${month}/${year}`;
-		dateLabels.push(dateStr);
-
-		const counts: Map<string, number> = new Map();
-		names.forEach(n => {
-			let newValue = 1;
-			if (counts.has(n)) newValue = counts.get(n) + 1;
-			counts.set(n, newValue);
-		});
-		counts.forEach((value, name) => {
-			if (!collectedByName.has(name)) {
-				collectedByName.set(name, []);
-			}
-			collectedByName.get(name).push(value);
-		});
-	}
+		return `${day}/${month}/${year}`;
+	})
 
 	const datasets: ChartDataset<"line", number[]>[] = [];
-	collectedByName.forEach((counts, name) => {
-		const padding = Array(dateLabels.length - counts.length).fill(0);
-		const paddedCounts = counts.concat(padding);
+	collected.names.forEach((counts, name) => {
 		datasets.push({
 			label: name,
-			data: paddedCounts,
+			data: counts,
+			fill: true
+		});
+	});
+	const chartData: ChartData<"line", number[], string> = {
+		labels: dateLabels,
+		datasets
+	}
+
+	const graphCfg: ChartConfiguration<"line", number[], string> = {
+		type: "line",
+		data: chartData,
+		options: {
+			responsive: true,
+			plugins: {
+				tooltip: {
+					mode: "index"
+				}
+			},
+			interaction: {
+				mode: "nearest",
+				axis: "x",
+				intersect: false
+			},
+			scales: {
+				x: {
+					title: {
+						display: true,
+						text: "Date"
+					}
+				},
+				y: {
+					stacked: true,
+					title: {
+						display: true,
+						text: "Poops"
+					}
+				}
+			}
+		}
+	};
+
+	const canvas: HTMLCanvasElement = document.querySelector("#totalStackGraph");
+	new Chart(canvas, graphCfg);
+}
+
+function totalGraph(data: Poop[], name: string | null, timespan: Timespan): void {
+	if (name !== null) {
+		data = data.filter(p => p.name === name);
+	}
+
+	const collected = collectNameDate(data, timespan);
+	const dateLabels = collected.dates.map(date => {
+		const day = date.getDate();
+		const month = date.getMonth() + 1;
+		const year = date.getFullYear();
+		return `${day}/${month}/${year}`;
+	})
+
+	const datasets: ChartDataset<"line", number[]>[] = [];
+	collected.names.forEach((counts, name) => {
+		let accum = 0;
+		const totalCounts: number[] = [];
+		for (const count of counts) {
+			accum += count;
+			totalCounts.push(accum);
+		}
+		datasets.push({
+			label: name,
+			data: totalCounts,
 			fill: true
 		});
 	});

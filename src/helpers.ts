@@ -1,10 +1,5 @@
 import { Poop } from "./index";
 
-export interface Collected {
-	date: Date,
-	names: string[]
-}
-
 export type Timespan = "day" | "week" | "month";
 
 export function roundDate(date: Date, timespan: Timespan): Date {
@@ -49,8 +44,13 @@ export function advanceDate(date: Date, timespan: Timespan): Date {
 	return result;
 }
 
-export function collectDateRange(data: Poop[], timespan: Timespan): Collected[] {
-	const result: Collected[] = [];
+export interface CollectedDate {
+	date: Date,
+	names: string[]
+}
+
+export function collectDateRange(data: Poop[], timespan: Timespan): CollectedDate[] {
+	const result: CollectedDate[] = [];
 	let names: string[] = [];
 
 	let currentDate = roundDate(data[0].date, timespan);
@@ -77,4 +77,43 @@ export function collectDateRange(data: Poop[], timespan: Timespan): Collected[] 
 	}
 
 	return result;
+}
+
+export interface CollectedDateName {
+	names: Map<string, number[]>,
+	dates: Date[]
+}
+
+export function collectNameDate(data: Poop[], timespan: Timespan): CollectedDateName {
+	const collected = collectDateRange(data, timespan);
+	const collectedNames: Map<string, number[]> = new Map();
+	const dates: Date[] = [];
+
+	for (const {date, names} of collected) {
+		dates.push(date);
+
+		const counts: Map<string, number> = new Map();
+		names.forEach(n => {
+			let newValue = 1;
+			if (counts.has(n)) newValue = counts.get(n) + 1;
+			counts.set(n, newValue);
+		});
+
+		collectedNames.forEach((value, name) => {
+			if (counts.has(name)) {
+				value.push(counts.get(name));
+				counts.delete(name);
+			} else {
+				value.push(0);
+			}
+		});
+		counts.forEach((value, name) => {
+			if (!collectedNames.has(name))
+				collectedNames.set(name, [ value ]);
+			else
+				collectedNames.get(name).push(value);
+		});
+	}
+
+	return { names: collectedNames, dates };
 }
