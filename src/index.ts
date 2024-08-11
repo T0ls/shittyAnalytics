@@ -1,4 +1,4 @@
-import { totalGraph, avgGraph } from "./graphs";
+import { initializeGraphs, updateTotalStack } from "./graphs";
 
 export interface Poop {
 	name: string;
@@ -6,10 +6,12 @@ export interface Poop {
 }
 
 export interface GlobalState {
+	data: Poop[],
 	selectedName: string | null
 }
 
 export const globalState: GlobalState = {
+	data: [],
 	selectedName: null
 }
 
@@ -31,9 +33,12 @@ document.addEventListener("DOMContentLoaded", _ => {
 					globalState.selectedName = selected;
 				}
 				dropdownMenu.innerHTML = selected;
+				drawGraphs();
 			});
 		});
 	});
+
+	initializeGraphs();
 });
 
 function parseFile(file: File): void {
@@ -56,7 +61,8 @@ function parseFile(file: File): void {
 		}
 
 		result.sort((a, b) => a.date.getTime() - b.date.getTime());
-		initializeGraphs(result);
+		globalState.data = result;
+		onParse();
 	}
 }
 
@@ -71,14 +77,22 @@ function parseDate(date: string): Date {
 	return new Date(year, month - 1, day, hour, minute)
 }
 
-function initializeGraphs(data: Poop[]): void {
-	totalGraph(data, null, "day");
-	fillPeopleRadio(data);
+// Function called when new data is parsed, it must initialize everything based on the data
+// The data is passed through the globalState
+function onParse(): void {
+	fillPeopleRadio();
+	drawGraphs();
 }
 
-function fillPeopleRadio(data: Poop[]): void {
+// Function called when graphs require an update
+// All the configuration and data is passed through the globalState
+function drawGraphs(): void {
+	updateTotalStack("day");
+}
+
+function fillPeopleRadio(): void {
 	const names: string[] = [];
-	for (const {name} of data) {
+	for (const {name} of globalState.data) {
 		if (!names.includes(name)) {
 			names.push(name);
 		}
@@ -86,7 +100,8 @@ function fillPeopleRadio(data: Poop[]): void {
 
 	const container = document.querySelector("#namesDropdown");
 	const template = container.querySelector("template");
-	document.getElementById("namesDropdownSelectionX").classList.add("d-none");
+	document.querySelector("#namesDropdownSelectionX").classList.add("d-none");
+	names.sort((a, b) => a.localeCompare(b));
 	names.forEach((name, i) => {
 		const templateClone = template.content.cloneNode(true) as DocumentFragment;
 		templateClone.querySelector("li").id = `namesDropdownSelection${i+1}`;
