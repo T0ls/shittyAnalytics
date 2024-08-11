@@ -1,19 +1,39 @@
-import { Chart, ChartConfiguration, ChartData, ChartDataset } from "chart.js/auto";
-import { collectDateRange, collectNameDate, Timespan } from "./helpers";
+import { totalGraph, avgGraph } from "./graphs";
 
 export interface Poop {
 	name: string;
 	date: Date;
 }
 
-let selectedName: string = "general";
+export interface GlobalState {
+	selectedName: string | null
+}
 
-document.addEventListener("DOMContentLoaded", evt => {
+export const globalState: GlobalState = {
+	selectedName: null
+}
+
+document.addEventListener("DOMContentLoaded", _ => {
 	const input: HTMLInputElement = document.querySelector("#formFile");
-	input.onchange = _ => {
-		const file = input.files[0];
-		parseFile(file);
-	}
+	input.addEventListener("change", _ => parseFile(input.files[0]));
+
+    const button: HTMLButtonElement = document.querySelector("#dropdownMenuButton");
+	button.addEventListener("click", _ => {
+		const dropdownItems: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('#namesDropdown .dropdown-item');
+		const dropdownMenu = document.querySelector("#dropdownMenuButton");
+
+		dropdownItems.forEach(item => {
+			item.addEventListener('click', _ => {
+				const selected = item.textContent.trim();
+				if (selected === "General") {
+					globalState.selectedName = null;
+				} else {
+					globalState.selectedName = selected;
+				}
+				dropdownMenu.innerHTML = selected;
+			});
+		});
+	});
 });
 
 function parseFile(file: File): void {
@@ -63,9 +83,8 @@ function fillPeopleRadio(data: Poop[]): void {
 			names.push(name);
 		}
 	}
-	console.log("names:",names);
-	
-	const container = document.getElementById("namesDropdown");
+
+	const container = document.querySelector("#namesDropdown");
 	const template = container.querySelector("template");
 	document.getElementById("namesDropdownSelectionX").classList.add("d-none");
 	names.forEach((name, i) => {
@@ -75,155 +94,4 @@ function fillPeopleRadio(data: Poop[]): void {
 
 		container.appendChild(templateClone);
 	});
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const button = document.getElementById("dropdownMenuButton") as HTMLButtonElement;
-
-	button.addEventListener("click", () => {
-		const dropdownItems = document.querySelectorAll<HTMLAnchorElement>('#namesDropdown .dropdown-item');
-
-		dropdownItems.forEach((item) => {
-			item.addEventListener('click', () => {
-				selectedName = item.textContent?.trim();
-				console.log(item.textContent?.trim());
-				document.getElementById("dropdownMenuButton").innerHTML = selectedName;
-			});
-		});
-	});
-});
-
-function updateSelectedName(): void {
-}
-
-function avgGraph(data: Poop[], name: string | null, timespan: Timespan): void {
-	if (name !== null) {
-		data = data.filter(p => p.name === name);
-	}
-
-	const collected = collectNameDate(data, timespan);
-	const dateLabels = collected.dates.map(date => {
-		const day = date.getDate();
-		const month = date.getMonth() + 1;
-		const year = date.getFullYear();
-		return `${day}/${month}/${year}`;
-	})
-
-	const datasets: ChartDataset<"line", number[]>[] = [];
-	collected.names.forEach((counts, name) => {
-		datasets.push({
-			label: name,
-			data: counts,
-			fill: true
-		});
-	});
-	const chartData: ChartData<"line", number[], string> = {
-		labels: dateLabels,
-		datasets
-	}
-
-	const graphCfg: ChartConfiguration<"line", number[], string> = {
-		type: "line",
-		data: chartData,
-		options: {
-			responsive: true,
-			plugins: {
-				tooltip: {
-					mode: "index"
-				}
-			},
-			interaction: {
-				mode: "nearest",
-				axis: "x",
-				intersect: false
-			},
-			scales: {
-				x: {
-					title: {
-						display: true,
-						text: "Date"
-					}
-				},
-				y: {
-					stacked: true,
-					title: {
-						display: true,
-						text: "Poops"
-					}
-				}
-			}
-		}
-	};
-
-	const canvas: HTMLCanvasElement = document.querySelector("#totalStackGraph");
-	new Chart(canvas, graphCfg);
-}
-
-function totalGraph(data: Poop[], name: string | null, timespan: Timespan): void {
-	if (name !== null) {
-		data = data.filter(p => p.name === name);
-	}
-
-	const collected = collectNameDate(data, timespan);
-	const dateLabels = collected.dates.map(date => {
-		const day = date.getDate();
-		const month = date.getMonth() + 1;
-		const year = date.getFullYear();
-		return `${day}/${month}/${year}`;
-	})
-
-	const datasets: ChartDataset<"line", number[]>[] = [];
-	collected.names.forEach((counts, name) => {
-		let accum = 0;
-		const totalCounts: number[] = [];
-		for (const count of counts) {
-			accum += count;
-			totalCounts.push(accum);
-		}
-		datasets.push({
-			label: name,
-			data: totalCounts,
-			fill: true
-		});
-	});
-	const chartData: ChartData<"line", number[], string> = {
-		labels: dateLabels,
-		datasets
-	}
-
-	const graphCfg: ChartConfiguration<"line", number[], string> = {
-		type: "line",
-		data: chartData,
-		options: {
-			responsive: true,
-			plugins: {
-				tooltip: {
-					mode: "index"
-				}
-			},
-			interaction: {
-				mode: "nearest",
-				axis: "x",
-				intersect: false
-			},
-			scales: {
-				x: {
-					title: {
-						display: true,
-						text: "Date"
-					}
-				},
-				y: {
-					stacked: true,
-					title: {
-						display: true,
-						text: "Poops"
-					}
-				}
-			}
-		}
-	};
-
-	const canvas: HTMLCanvasElement = document.querySelector("#totalStackGraph");
-	new Chart(canvas, graphCfg);
 }
