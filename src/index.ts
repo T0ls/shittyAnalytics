@@ -7,12 +7,14 @@ export interface Poop {
 
 export interface GlobalState {
 	data: Poop[],
-	selectedName: string | null
+	selectedName: string | null,
+	nameColor: Map<string, string>,
 }
 
 export const globalState: GlobalState = {
 	data: [],
-	selectedName: null
+	selectedName: null,
+	nameColor: new Map(),
 }
 
 document.addEventListener("DOMContentLoaded", _ => {
@@ -80,6 +82,7 @@ function parseDate(date: string): Date {
 // Function called when new data is parsed, it must initialize everything based on the data
 // The data is passed through the globalState
 function onParse(): void {
+	globalState.nameColor = new Map();
 	fillPeopleRadio();
 	drawGraphs();
 }
@@ -93,19 +96,26 @@ function drawGraphs(): void {
 function fillPeopleRadio(): void {
 	const names: string[] = [];
 	for (const {name} of globalState.data) {
-		if (!names.includes(name)) {
-			names.push(name);
-		}
+		if (!names.includes(name)) names.push(name);
 	}
+	names.sort((a, b) => a.localeCompare(b));
+
+	const hueDelta = 360 / names.length;
+	let hue = 0;
+	names.forEach(name => {
+		globalState.nameColor.set(name, `hsl(${hue}, 65%, 60%)`);
+		hue += hueDelta;
+	});
 
 	const container = document.querySelector("#namesDropdown");
 	const template = container.querySelector("template");
 	document.querySelector("#namesDropdownSelectionX").classList.add("d-none");
-	names.sort((a, b) => a.localeCompare(b));
 	names.forEach((name, i) => {
 		const templateClone = template.content.cloneNode(true) as DocumentFragment;
 		templateClone.querySelector("li").id = `namesDropdownSelection${i+1}`;
-		templateClone.querySelector("a").innerHTML = name;
+		const button = templateClone.querySelector("a");
+		button.innerHTML = name;
+		button.style.setProperty("--bubble-color", globalState.nameColor.get(name));
 
 		container.appendChild(templateClone);
 	});

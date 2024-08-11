@@ -83,7 +83,8 @@ export function updateTotalStack(timespan: Timespan): void {
 		datasets.push({
 			label: name,
 			data: totalCounts,
-			fill: true
+			fill: true,
+			backgroundColor: globalState.nameColor.get(name)
 		});
 	});
 	const chartData: ChartData<"line", number[], string> = {
