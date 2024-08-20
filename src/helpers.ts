@@ -117,3 +117,14 @@ export function collectNameDate(data: Poop[], timespan: Timespan): CollectedDate
 
 	return { names: collectedNames, dates };
 }
+
+// TODO: collect base on timespans
+export function collectName(data: Poop[]): Map<string, number> {
+	const collected: Map<string, number> = new Map();
+	data.forEach(v => {
+		let newValue = collected.get(v.name) + 1;
+		if (isNaN(newValue)) newValue = 1;
+		collected.set(v.name, newValue);
+	});
+	return collected;
+}

@@ -1,4 +1,4 @@
-import { initializeGraphs, updateTotalStack } from "./graphs";
+import { initializeGraphs, updateTotalPie, updateTotalStack } from "./graphs";
 
 export interface Poop {
 	name: string;
@@ -91,6 +91,7 @@ function onParse(): void {
 // All the configuration and data is passed through the globalState
 function drawGraphs(): void {
 	updateTotalStack("day");
+	updateTotalPie();
 }
 
 function fillPeopleRadio(): void {
