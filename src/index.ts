@@ -121,3 +121,7 @@ function fillPeopleRadio(): void {
 		container.appendChild(templateClone);
 	});
 }
+
+function setTimeInterval(start: string, end: string) {
+	console.log(start, end);
+}
