@@ -7,41 +7,39 @@ export interface Poop {
 
 export interface GlobalState {
 	data: Poop[],
-	selectedName: string | null,
+	selectedNames: string[],
 	nameColor: Map<string, string>,
 }
 
 export const globalState: GlobalState = {
 	data: [],
-	selectedName: null,
+	selectedNames: [],
 	nameColor: new Map(),
 }
 
-document.addEventListener("DOMContentLoaded", _ => {
-	const input: HTMLInputElement = document.querySelector("#formFile");
-	input.addEventListener("change", _ => parseFile(input.files[0]));
+document.addEventListener('DOMContentLoaded', _ => {
+    // Seleziona tutte le checkbox all'interno del menu a discesa
+    const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll('#namesDropdown input[type="checkbox"]');
 
-    const button: HTMLButtonElement = document.querySelector("#dropdownMenuButton");
-	button.addEventListener("click", _ => {
-		const dropdownItems: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('#namesDropdown .dropdown-item');
-		const dropdownMenu = document.querySelector("#dropdownMenuButton");
-
-		dropdownItems.forEach(item => {
-			item.addEventListener('click', _ => {
-				const selected = item.textContent.trim();
-				if (selected === "General") {
-					globalState.selectedName = null;
-				} else {
-					globalState.selectedName = selected;
-				}
-				dropdownMenu.innerHTML = selected;
-				drawGraphs();
-			});
-		});
-	});
-
-	initializeGraphs();
+    // Aggiungi un event listener a ogni checkbox
+    checkboxes.forEach((checkbox: HTMLInputElement) => {
+        checkbox.addEventListener('change', () => {
+            console.log(`Checkbox with ID ${checkbox.id} is ${checkbox.checked ? 'checked' : 'unchecked'}`);
+            // Puoi anche chiamare altre funzioni o eseguire altre operazioni qui
+        });
+    });
 });
+
+export function updateSelectedNames(name: string) {
+	const checkBox = document.querySelector(`#personCheck${name}`) as HTMLInputElement;
+	if (checkBox.checked) {
+		globalState.selectedNames.push(name);	
+	} else {
+		globalState.selectedNames = globalState.selectedNames.filter(n => n !== name);
+	}
+}
+// Add function to the "window" object 
+(window as any).updateSelectedNames = updateSelectedNames;
 
 function parseFile(file: File): void {
 	const reader = new FileReader();
@@ -115,8 +113,11 @@ function fillPeopleRadio(): void {
 		const templateClone = template.content.cloneNode(true) as DocumentFragment;
 		templateClone.querySelector("li").id = `namesDropdownSelection${i+1}`;
 		const button = templateClone.querySelector("a");
+		const check = templateClone.querySelector("input");
 		button.innerHTML = name;
 		button.style.setProperty("--bubble-color", globalState.nameColor.get(name));
+		check.id = `personCheck${name}`;
+		//check.setAttribute("onClick", `updateSelectedNames(${name})`)
 
 		container.appendChild(templateClone);
 	});

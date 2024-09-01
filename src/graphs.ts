@@ -80,8 +80,8 @@ export function updateTotalStack(timespan: Timespan): void {
 	if (graph === null) return;
 
 	let data = globalState.data;
-	if (globalState.selectedName !== null) {
-		data = data.filter(p => p.name === globalState.selectedName);
+	if (globalState.selectedNames !== null && globalState.selectedNames.length > 0) {
+		data = data.filter(p => globalState.selectedNames.some(name => p.name === name));
 	}
 
 	const collected = collectNameDate(data, timespan);
@@ -123,8 +123,8 @@ export function updateTotalPie(): void {
 	if (graph === null) return;
 
 	let data = globalState.data;
-	if (globalState.selectedName !== null) {
-		data = data.filter(p => p.name === globalState.selectedName);
+	if (globalState.selectedNames !== null && globalState.selectedNames.length > 0) {
+		data = data.filter(p => globalState.selectedNames.some(name => p.name === name));
 	}
 
 	const totals = collectName(data);
@@ -149,8 +149,8 @@ export function updateTotalPie(): void {
 /*
 export function avgGraph(timespan: Timespan): void {
 	let data = globalState.data;
-	if (globalState.selectedName !== null) {
-		data = data.filter(p => p.name === globalState.selectedName);
+	if (globalState.selectedNames !== null) {
+		data = data.filter(p => p.name === globalState.selectedNames);
 	}
 
 	const collected = collectNameDate(data, timespan);
