@@ -192,35 +192,36 @@
 	<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 	<!-- script for dateSelector -->
-	<script>
-		$(function() {
-			$('#daterange').daterangepicker({
-				ranges: {
-					'Today': [moment(), moment()],
-					'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-					'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-					'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-					'This Month': [moment().startOf('month'), moment().endOf('month')],
-					'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-					'Always': [moment('2009-01-01'), moment()]
-				},
-				startDate: moment().subtract(29, 'days'),
-				endDate: moment()
-			});
-			// Gestione dell'evento apply.daterangepicker 25-09-20
-			$('#daterange').on('apply.daterangepicker', function(ev, picker) {
-				var startDate = picker.startDate.format('DD-MM-YY');
-				var endDate = picker.endDate.format('DD-MM-YY');
 
-				// Mostra il range selezionato in un elemento della pagina
-				$('#selectedDates').text(startDate + ' to ' + endDate);
+<script>
+    $(function() {
+        $('#daterange').daterangepicker({
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Always': [moment('2009-01-01'), moment()]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
+        });
 
-				//setTimeInterval(startDate, endDate);
-				// Stampa nella console per debug
-				console.log("Data di inizio: " + startDate);
-				console.log("Data di fine: " + endDate);
-			});
-		});
-	</script>
+        // Evento per l'applicazione dell'intervallo di date
+        $('#daterange').on('apply.daterangepicker', function(ev, picker) {
+            var startDate = picker.startDate.format('DD-MM-YY');
+            var endDate = picker.endDate.format('DD-MM-YY');
+
+            // Mostra il range selezionato in un elemento della pagina
+            $('#selectedDates').text(startDate + ' to ' + endDate);
+
+            // Chiama la funzione handleDateSelection nel file index.ts
+            handleDateSelection(startDate, endDate);  // Assumi che la funzione sia esposta come globale
+        });
+    });
+</script>
+
 </body>
 </html>

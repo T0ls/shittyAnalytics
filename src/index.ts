@@ -152,3 +152,21 @@ function fillPeopleRadio(): void {
         });
     });
 }
+
+// Funzione che gestisce le date selezionate
+export function handleDateSelection(startDate: string, endDate: string) {
+	// Creazione degli oggetti Date
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+	// vedi tu sam se preferisci in una struct o come variabili singole
+    const timestampRange = {
+        startTimestamp: start.getTime(),  // Timestamp di inizio
+        endTimestamp: end.getTime()       // Timestamp di fine
+    };
+	//updateTotalStack(timestampRange);
+	//updateTotalPie();
+}
+
+// Esposizione della funzione al contesto globale
+(window as any).handleDateSelection = handleDateSelection;
