@@ -152,7 +152,3 @@ function fillPeopleRadio(): void {
         });
     });
 }
-
-function setTimeInterval(start: string, end: string) {
-	console.log(start, end);
-}
