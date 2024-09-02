@@ -8,12 +8,16 @@ export interface Poop {
 export interface GlobalState {
 	data: Poop[],
 	selectedNames: string[],
+	startTime: Date | null,
+	endTime: Date | null,
 	nameColor: Map<string, string>,
 }
 
 export const globalState: GlobalState = {
 	data: [],
 	selectedNames: [],
+	startTime: null,
+	endTime: null,
 	nameColor: new Map(),
 }
 
