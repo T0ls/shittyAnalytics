@@ -24,7 +24,24 @@ document.addEventListener('DOMContentLoaded', _ => {
 		globalState.selectedNames = [];
     	parseFile(input.files[0]);
 	});
+	initializeGraphs();
 });
+
+// Funzione per cambiare il pulsante di dropdown in base allo stato corrente: Global, Personal, Comparison
+function changeDropdownText() {
+	const button = document.querySelector("#dropdownMenuButton");
+	const namesLabel = document.querySelector("#selctedNamesLabel");
+	if (globalState.selectedNames.length === 0) {
+		button.innerHTML = "General";
+		namesLabel.innerHTML = `Selected persons:`;
+	} else if (globalState.selectedNames.length === 1) {
+		button.innerHTML = "Personal";
+		namesLabel.innerHTML = `Selected persons: ${globalState.selectedNames}`;
+	} else {
+		button.innerHTML = "Comparison";
+		namesLabel.innerHTML = `Selected persons: ${globalState.selectedNames}`;
+	}
+}
 
 export function updateSelectedNames(name: string, checkStatus: boolean) {
 	if (checkStatus) {
@@ -32,7 +49,8 @@ export function updateSelectedNames(name: string, checkStatus: boolean) {
 	} else {
 		globalState.selectedNames = globalState.selectedNames.filter(n => n !== name);
 	}
-	console.log("GlobalState.selectedNames",globalState.selectedNames);
+	//console.log("GlobalState.selectedNames",globalState.selectedNames);
+	drawGraphs();
 }
 // Add function to the "window" object 
 (window as any).updateSelectedNames = updateSelectedNames;
@@ -130,6 +148,7 @@ function fillPeopleRadio(): void {
             //console.log(`Checkbox with ID ${checkboxId} is ${checkbox.checked ? 'checked' : 'unchecked'}`);
 			//console.log(checkboxId.split("personCheck").join(''));
 			updateSelectedNames(checkboxId.split("personCheck").join(''), checkbox.checked);
+			changeDropdownText();
         });
     });
 }

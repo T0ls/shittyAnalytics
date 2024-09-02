@@ -81,7 +81,7 @@ export function updateTotalStack(timespan: Timespan): void {
 
 	let data = globalState.data;
 	if (globalState.selectedNames !== null && globalState.selectedNames.length > 0) {
-		data = data.filter(p => globalState.selectedNames.some(name => p.name === name));
+		data = data.filter(p => globalState.selectedNames.includes(p.name));
 	}
 
 	const collected = collectNameDate(data, timespan);
