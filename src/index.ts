@@ -18,25 +18,21 @@ export const globalState: GlobalState = {
 }
 
 document.addEventListener('DOMContentLoaded', _ => {
-    // Seleziona tutte le checkbox all'interno del menu a discesa
-    const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll('#namesDropdown input[type="checkbox"]');
-
-    // Aggiungi un event listener a ogni checkbox
-    checkboxes.forEach((checkbox: HTMLInputElement) => {
-        checkbox.addEventListener('change', () => {
-            console.log(`Checkbox with ID ${checkbox.id} is ${checkbox.checked ? 'checked' : 'unchecked'}`);
-            // Puoi anche chiamare altre funzioni o eseguire altre operazioni qui
-        });
-    });
+	// Evento per fileInput
+	const input: HTMLInputElement = document.querySelector("#formFile");
+	input.addEventListener("change", _ => {
+		globalState.selectedNames = [];
+    	parseFile(input.files[0]);
+	});
 });
 
-export function updateSelectedNames(name: string) {
-	const checkBox = document.querySelector(`#personCheck${name}`) as HTMLInputElement;
-	if (checkBox.checked) {
+export function updateSelectedNames(name: string, checkStatus: boolean) {
+	if (checkStatus) {
 		globalState.selectedNames.push(name);	
 	} else {
 		globalState.selectedNames = globalState.selectedNames.filter(n => n !== name);
 	}
+	console.log("GlobalState.selectedNames",globalState.selectedNames);
 }
 // Add function to the "window" object 
 (window as any).updateSelectedNames = updateSelectedNames;
@@ -106,8 +102,11 @@ function fillPeopleRadio(): void {
 		hue += hueDelta;
 	});
 
-	const container = document.querySelector("#namesDropdown");
-	const template = container.querySelector("template");
+	const container1 = document.querySelector("#namesDropdown");
+	const container = document.querySelector("#templateDiv");
+	const template = container1.querySelector("template");
+	container.innerHTML = "";
+	container1.appendChild(template);
 	document.querySelector("#namesDropdownSelectionX").classList.add("d-none");
 	names.forEach((name, i) => {
 		const templateClone = template.content.cloneNode(true) as DocumentFragment;
@@ -121,6 +120,18 @@ function fillPeopleRadio(): void {
 
 		container.appendChild(templateClone);
 	});
+
+	const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll('#namesDropdown input[type="checkbox"]');
+
+    // Aggiungi un event listener a ogni checkbox x updatare la lista
+    checkboxes.forEach((checkbox: HTMLInputElement) => {
+        checkbox.addEventListener('change', () => {
+			const checkboxId: string = checkbox.id;
+            //console.log(`Checkbox with ID ${checkboxId} is ${checkbox.checked ? 'checked' : 'unchecked'}`);
+			//console.log(checkboxId.split("personCheck").join(''));
+			updateSelectedNames(checkboxId.split("personCheck").join(''), checkbox.checked);
+        });
+    });
 }
 
 function setTimeInterval(start: string, end: string) {
